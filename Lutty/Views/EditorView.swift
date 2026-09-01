@@ -101,7 +101,10 @@ struct EditorView: View {
             }
             .sheet(isPresented: $viewModel.isSharePresented, onDismiss: shareDismissed) {
                 if let shareURL = viewModel.shareURL {
-                    ShareSheet(items: [shareURL])
+                    ShareSheet(
+                        items: [shareURL],
+                        excludedActivityTypes: viewModel.excludedShareActivityTypes
+                    )
                         .presentationDetents([.medium, .large])
                 }
             }
@@ -243,13 +246,21 @@ struct EditorView: View {
     }
 
     private var compareGesture: some Gesture {
-        LongPressGesture(minimumDuration: 0.25, maximumDistance: 10)
+        LongPressGesture(minimumDuration: 0.2, maximumDistance: 18)
+            .sequenced(before: DragGesture(minimumDistance: 0))
             .updating($isComparing) { value, state, _ in
-                state = value
+                switch value {
+                case .first(true), .second(true, _):
+                    state = true
+                default:
+                    state = false
+                }
             }
     }
 
     private func updateAdjustmentGesture(_ value: DragGesture.Value) {
+        guard !isComparing else { return }
+
         if dragSession.axis == nil {
             let horizontalDistance = abs(value.translation.width)
             let verticalDistance = abs(value.translation.height)
@@ -330,7 +341,9 @@ struct EditorView: View {
     }
 
     private func shareDismissed() {
-        if let notice = viewModel.exportNotice, notice != "Saved to Photos" {
+        let notice = viewModel.exportNotice
+        viewModel.shareDidDismiss()
+        if let notice, notice != "Saved to Photos" {
             viewModel.errorMessage = notice
         }
     }

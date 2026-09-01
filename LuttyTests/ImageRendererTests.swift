@@ -289,3 +289,49 @@ struct AdjustmentGestureTests {
         ) == -2)
     }
 }
+
+@Suite("Export sharing")
+@MainActor
+struct ExportSharingTests {
+    @Test("A successful automatic save removes the duplicate Save Image action")
+    func excludesDuplicatePhotosSave() {
+        let storeURL = FileManager.default.temporaryDirectory
+            .appending(path: "LuttyExportPolicyTests-\(UUID().uuidString)")
+        defer { try? FileManager.default.removeItem(at: storeURL) }
+
+        let viewModel = EditorViewModel(
+            asset: PhotoAsset(data: Data(), isPNG: false),
+            lutStore: LUTStore(rootURL: storeURL)
+        )
+
+        #expect(viewModel.excludedShareActivityTypes.isEmpty)
+        viewModel.didSaveToPhotos = true
+        #expect(viewModel.excludedShareActivityTypes == [.saveToCameraRoll])
+    }
+
+    @Test("Dismissing share removes its temporary rendered file")
+    func removesTemporaryShareFile() throws {
+        let storeURL = FileManager.default.temporaryDirectory
+            .appending(path: "LuttyShareCleanupTests-\(UUID().uuidString)")
+        defer { try? FileManager.default.removeItem(at: storeURL) }
+
+        let fileURL = FileManager.default.temporaryDirectory
+            .appending(path: "LuttyShareCleanup-\(UUID().uuidString).heic")
+        try Data([0x01]).write(to: fileURL)
+
+        let viewModel = EditorViewModel(
+            asset: PhotoAsset(data: Data(), isPNG: false),
+            lutStore: LUTStore(rootURL: storeURL)
+        )
+        viewModel.shareURL = fileURL
+        viewModel.isSharePresented = true
+        viewModel.didSaveToPhotos = true
+
+        viewModel.shareDidDismiss()
+
+        #expect(viewModel.shareURL == nil)
+        #expect(!viewModel.isSharePresented)
+        #expect(!viewModel.didSaveToPhotos)
+        #expect(!FileManager.default.fileExists(atPath: fileURL.path))
+    }
+}

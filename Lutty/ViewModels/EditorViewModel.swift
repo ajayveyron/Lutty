@@ -13,6 +13,7 @@ final class EditorViewModel {
     var isExporting = false
     var errorMessage: String?
     var exportNotice: String?
+    var didSaveToPhotos = false
     var shareURL: URL?
     var isSharePresented = false
 
@@ -134,8 +135,10 @@ final class EditorViewModel {
     func export() {
         guard !isExporting else { return }
         exportTask?.cancel()
+        discardShareFile()
         isExporting = true
         exportNotice = nil
+        didSaveToPhotos = false
 
         let sourceData = asset.data
         let currentRecipe = recipe
@@ -145,7 +148,10 @@ final class EditorViewModel {
         do {
             let lut = try lutStore.parsedLUT(for: currentRecipe.selectedLUTID)
             exportTask = Task {
-                defer { isExporting = false }
+                defer {
+                    isExporting = false
+                    exportTask = nil
+                }
                 do {
                     let fileURL = try await Task.detached(priority: .userInitiated) {
                         try renderer.export(
@@ -160,6 +166,7 @@ final class EditorViewModel {
 
                     do {
                         try await PhotoExporter.saveToPhotos(fileURL: fileURL)
+                        didSaveToPhotos = true
                         exportNotice = "Saved to Photos"
                     } catch {
                         exportNotice = error.localizedDescription
@@ -175,6 +182,24 @@ final class EditorViewModel {
             isExporting = false
             errorMessage = error.localizedDescription
         }
+    }
+
+    var excludedShareActivityTypes: [UIActivity.ActivityType] {
+        didSaveToPhotos ? [.saveToCameraRoll] : []
+    }
+
+    func shareDidDismiss() {
+        discardShareFile()
+        exportNotice = nil
+        didSaveToPhotos = false
+    }
+
+    private func discardShareFile() {
+        if let shareURL {
+            try? FileManager.default.removeItem(at: shareURL)
+        }
+        shareURL = nil
+        isSharePresented = false
     }
 }
 
