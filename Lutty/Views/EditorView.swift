@@ -20,20 +20,14 @@ struct EditorView: View {
                 AppTheme.editorBackground
                     .ignoresSafeArea()
 
-                photoPreview
+                VStack(spacing: 0) {
+                    photoArea
 
-                if viewModel.isRendering && viewModel.previewImage == nil {
-                    ProgressView()
-                        .tint(AppTheme.editorForeground)
-                        .controlSize(.large)
-                }
-
-                VStack {
-                    Spacer()
                     GlassEffectContainer(spacing: AppTheme.controlSpacing) {
                         EditorControls(viewModel: viewModel, luts: lutStore.luts)
                     }
                     .padding(.horizontal, 12)
+                    .padding(.top, 8)
                     .padding(.bottom, 8)
                 }
             }
@@ -95,25 +89,34 @@ struct EditorView: View {
     }
 
     @ViewBuilder
-    private var photoPreview: some View {
-        if let image = viewModel.isComparing ? viewModel.originalImage : viewModel.previewImage {
-            Image(uiImage: image)
-                .resizable()
-                .scaledToFit()
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .padding(.bottom, 214)
-                .contentShape(Rectangle())
-                .onLongPressGesture(
-                    minimumDuration: .infinity,
-                    maximumDistance: .infinity,
-                    pressing: { isPressing in
-                        viewModel.isComparing = isPressing
-                    },
-                    perform: {}
-                )
-                .accessibilityLabel("Edited photo")
-                .accessibilityHint("Press and hold to compare with the original")
+    private var photoArea: some View {
+        ZStack {
+            if let image = viewModel.isComparing ? viewModel.originalImage : viewModel.previewImage {
+                Image(uiImage: image)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .contentShape(Rectangle())
+                    .onLongPressGesture(
+                        minimumDuration: .infinity,
+                        maximumDistance: .infinity,
+                        pressing: { isPressing in
+                            viewModel.isComparing = isPressing
+                        },
+                        perform: {}
+                    )
+                    .accessibilityLabel("Edited photo")
+                    .accessibilityHint("Press and hold to compare with the original")
+            }
+
+            if viewModel.isRendering && viewModel.previewImage == nil {
+                ProgressView()
+                    .tint(AppTheme.editorForeground)
+                    .controlSize(.large)
+            }
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .clipped()
     }
 
     private var errorBinding: Binding<Bool> {

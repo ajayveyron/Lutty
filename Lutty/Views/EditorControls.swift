@@ -1,14 +1,30 @@
 import SwiftUI
 
+private enum EditorControlSection: String, CaseIterable, Identifiable {
+    case looks = "Looks"
+    case adjustments = "Adjust"
+
+    var id: Self { self }
+}
+
 struct EditorControls: View {
     @Bindable var viewModel: EditorViewModel
     let luts: [LUTDefinition]
 
+    @State private var section: EditorControlSection = .looks
+
     var body: some View {
-        VStack(spacing: 16) {
-            lutStrip
-            sliderControl
-            adjustmentBar
+        VStack(spacing: 14) {
+            sectionPicker
+
+            switch section {
+            case .looks:
+                lutStrip
+                sliderControl
+            case .adjustments:
+                adjustmentBar
+                sliderControl
+            }
         }
         .padding(16)
         .foregroundStyle(AppTheme.editorForeground)
@@ -16,6 +32,31 @@ struct EditorControls: View {
             .regular,
             in: RoundedRectangle(cornerRadius: AppTheme.controlCornerRadius, style: .continuous)
         )
+        .onChange(of: section) { _, newSection in
+            switch newSection {
+            case .looks:
+                viewModel.selectedAdjustment = .lut
+            case .adjustments:
+                if viewModel.selectedAdjustment == .lut {
+                    viewModel.selectedAdjustment = .exposure
+                }
+            }
+        }
+        .onChange(of: viewModel.selectedAdjustment) { _, adjustment in
+            section = adjustment == .lut ? .looks : .adjustments
+        }
+    }
+
+    private var sectionPicker: some View {
+        Picker("Editing controls", selection: $section) {
+            ForEach(EditorControlSection.allCases) { section in
+                Text(section.rawValue)
+                    .tag(section)
+            }
+        }
+        .pickerStyle(.segmented)
+        .labelsHidden()
+        .accessibilityIdentifier("Editor control section")
     }
 
     private var lutStrip: some View {
@@ -70,7 +111,7 @@ struct EditorControls: View {
 
     private var adjustmentBar: some View {
         HStack(spacing: 6) {
-            ForEach(AdjustmentKind.allCases) { adjustment in
+            ForEach(AdjustmentKind.basicAdjustments) { adjustment in
                 let isSelected = viewModel.selectedAdjustment == adjustment
                 Button {
                     viewModel.selectedAdjustment = adjustment
@@ -137,9 +178,16 @@ struct EditorControls: View {
 }
 
 private extension AdjustmentKind {
+    static let basicAdjustments: [AdjustmentKind] = [
+        .exposure,
+        .contrast,
+        .saturation,
+        .temperature
+    ]
+
     var shortTitle: String {
         switch self {
-        case .lut: "LUT"
+        case .lut: "Looks"
         case .exposure: "Light"
         case .contrast: "Contrast"
         case .saturation: "Color"
