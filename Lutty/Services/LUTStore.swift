@@ -22,16 +22,31 @@ final class LUTStore {
     private let rootURL: URL
     private let filesURL: URL
     private let manifestURL: URL
+    private let bundledSeedMarkerURL: URL
 
-    init(rootURL: URL? = nil, fileManager: FileManager = .default) {
+    init(
+        rootURL: URL? = nil,
+        fileManager: FileManager = .default,
+        bundledLUTURLs: [URL]? = nil
+    ) {
         self.fileManager = fileManager
         let baseURL = rootURL ?? fileManager.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
             .appending(path: "Lutty", directoryHint: .isDirectory)
         self.rootURL = baseURL
         self.filesURL = baseURL.appending(path: "LUTs", directoryHint: .isDirectory)
         self.manifestURL = baseURL.appending(path: "luts.json")
+        self.bundledSeedMarkerURL = baseURL.appending(path: "bundled-luts-v1.seeded")
         prepareStorage()
         loadManifest()
+
+        let shouldSeed = rootURL == nil || bundledLUTURLs != nil
+        if shouldSeed {
+            let sourceURLs = bundledLUTURLs ?? Bundle.main.urls(
+                forResourcesWithExtension: "cube",
+                subdirectory: nil
+            ) ?? []
+            seedBundledLUTsIfNeeded(from: sourceURLs)
+        }
     }
 
     @discardableResult
@@ -42,13 +57,19 @@ final class LUTStore {
         }
 
         let data = try Data(contentsOf: sourceURL, options: .mappedIfSafe)
+        return try importLUT(
+            data: data,
+            fallbackName: sourceURL.deletingPathExtension().lastPathComponent
+        )
+    }
+
+    private func importLUT(data: Data, fallbackName: String) throws -> LUTDefinition {
         let parsed = try CubeLUTParser.parse(data: data)
         let id = UUID()
         let storedFilename = "\(id.uuidString).cube"
         let destinationURL = filesURL.appending(path: storedFilename)
         try data.write(to: destinationURL, options: .atomic)
 
-        let fallbackName = sourceURL.deletingPathExtension().lastPathComponent
         let definition = LUTDefinition(
             id: id,
             displayName: parsed.title ?? fallbackName,
@@ -69,6 +90,24 @@ final class LUTStore {
             throw error
         }
         return definition
+    }
+
+    private func seedBundledLUTsIfNeeded(from sourceURLs: [URL]) {
+        guard !fileManager.fileExists(atPath: bundledSeedMarkerURL.path) else { return }
+        guard !sourceURLs.isEmpty else { return }
+
+        do {
+            for sourceURL in sourceURLs.sorted(by: { $0.lastPathComponent < $1.lastPathComponent }) {
+                let data = try Data(contentsOf: sourceURL, options: .mappedIfSafe)
+                try importLUT(
+                    data: data,
+                    fallbackName: sourceURL.deletingPathExtension().lastPathComponent
+                )
+            }
+            try Data().write(to: bundledSeedMarkerURL, options: .atomic)
+        } catch {
+            assertionFailure("Unable to seed bundled LUTs: \(error.localizedDescription)")
+        }
     }
 
     func rename(_ lut: LUTDefinition, to proposedName: String) throws {

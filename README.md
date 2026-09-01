@@ -5,6 +5,7 @@ Lutty is a small, local-first iPhone photo editor for importing `.cube` LUTs, ap
 ## Features
 
 - Import and validate standard 3D `.cube` LUTs from Files
+- Start with four original warm presets: Soft Warm, Golden Hour, Rose Fade, and Story Glow
 - Rename, reuse, and delete LUTs stored locally on the device
 - Edit JPEG, HEIC, and PNG still photos from the Photos picker
 - Tune LUT strength, exposure, contrast, saturation, and temperature
@@ -27,6 +28,8 @@ Lutty does not use accounts, analytics, networking, or cloud storage. Photos and
 3. Connect your iPhone, select it as the run destination, and press Run.
 
 The checked-in Xcode project is generated from `project.yml` with [XcodeGen](https://github.com/yonaskolb/XcodeGen). Re-run `xcodegen generate` after changing the project specification.
+
+The bundled presets are generated from the original formulas in `Scripts/generate_bundled_luts.swift`. Run `swift Scripts/generate_bundled_luts.swift` to regenerate their `.cube` files.
 
 ## Tests
 

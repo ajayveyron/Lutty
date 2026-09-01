@@ -53,4 +53,45 @@ struct LUTStoreTests {
             try store.rename(imported, to: "   ")
         }
     }
+
+    @Test("Seeds bundled LUTs only once")
+    func seedsBundledLUTsOnce() throws {
+        let testRoot = FileManager.default.temporaryDirectory
+            .appending(path: "LuttySeedTests-\(UUID().uuidString)", directoryHint: .isDirectory)
+        try FileManager.default.createDirectory(at: testRoot, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: testRoot) }
+
+        let sourceURL = testRoot.appending(path: "Soft-Warm.cube")
+        try Data(CubeLUTParserTests.identityCube.utf8).write(to: sourceURL)
+        let storageURL = testRoot.appending(path: "Storage", directoryHint: .isDirectory)
+
+        let seeded = LUTStore(rootURL: storageURL, bundledLUTURLs: [sourceURL])
+        #expect(seeded.luts.map(\.displayName) == ["Identity"])
+
+        guard let bundledLUT = seeded.luts.first else {
+            Issue.record("Expected a bundled LUT")
+            return
+        }
+        try seeded.delete(bundledLUT)
+
+        let reloaded = LUTStore(rootURL: storageURL, bundledLUTURLs: [sourceURL])
+        #expect(reloaded.luts.isEmpty)
+    }
+
+    @Test("Bundles four valid warm presets")
+    func bundlesWarmPresets() throws {
+        let urls = Bundle.main.urls(forResourcesWithExtension: "cube", subdirectory: nil) ?? []
+        let parsed = try urls.map { url in
+            try CubeLUTParser.parse(data: Data(contentsOf: url))
+        }
+
+        #expect(parsed.count == 4)
+        #expect(Set(parsed.compactMap(\.title)) == [
+            "Soft Warm",
+            "Golden Hour",
+            "Rose Fade",
+            "Story Glow"
+        ])
+        #expect(parsed.allSatisfy { $0.size == 17 })
+    }
 }
