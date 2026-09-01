@@ -1,6 +1,6 @@
 import SwiftUI
 
-private enum EditorControlSection: String, CaseIterable, Identifiable {
+enum EditorControlSection: String, CaseIterable, Identifiable {
     case looks = "Looks"
     case adjustments = "Adjust"
 
@@ -10,8 +10,7 @@ private enum EditorControlSection: String, CaseIterable, Identifiable {
 struct EditorControls: View {
     @Bindable var viewModel: EditorViewModel
     let luts: [LUTDefinition]
-
-    @State private var section: EditorControlSection = .looks
+    @Binding var section: EditorControlSection
 
     var body: some View {
         VStack(spacing: 14) {
@@ -22,8 +21,7 @@ struct EditorControls: View {
                 lutStrip
                 sliderControl
             case .adjustments:
-                adjustmentBar
-                sliderControl
+                adjustmentReadout
             }
         }
         .padding(16)
@@ -109,89 +107,45 @@ struct EditorControls: View {
         }
     }
 
-    private var adjustmentBar: some View {
-        HStack(spacing: 6) {
-            ForEach(AdjustmentKind.basicAdjustments) { adjustment in
-                let isSelected = viewModel.selectedAdjustment == adjustment
-                Button {
-                    viewModel.selectedAdjustment = adjustment
-                } label: {
-                    VStack(spacing: 5) {
-                        Image(systemName: adjustment.systemImage)
-                            .font(.body)
-                        Text(adjustment.shortTitle)
-                            .font(.caption2)
-                    }
-                    .frame(maxWidth: .infinity)
-                    .frame(height: 48)
-                    .background(isSelected ? AppTheme.selectedEditorControl : Color.clear)
-                    .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
-                }
-                .buttonStyle(.plain)
-                .accessibilityAddTraits(isSelected ? .isSelected : [])
+    private var adjustmentReadout: some View {
+        VStack(spacing: 8) {
+            HStack(spacing: 12) {
+                Image(systemName: viewModel.selectedAdjustment.systemImage)
+                    .font(.body.weight(.medium))
+
+                Text(viewModel.selectedAdjustment.title)
+                    .font(.subheadline.weight(.semibold))
+
+                Spacer()
+
+                Text(formattedValue)
+                    .font(.subheadline.monospacedDigit())
+                    .foregroundStyle(AppTheme.secondaryEditorForeground)
             }
+
+            Text("Swipe up or down to choose · left or right to adjust")
+                .font(.caption)
+                .foregroundStyle(AppTheme.secondaryEditorForeground)
+                .frame(maxWidth: .infinity, alignment: .leading)
         }
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel(viewModel.selectedAdjustment.title)
+        .accessibilityValue(formattedValue)
+        .accessibilityHint("Swipe vertically on the photo to choose a setting, or horizontally to adjust its value")
     }
 
     private var sliderBinding: Binding<Double> {
         Binding(
-            get: {
-                switch viewModel.selectedAdjustment {
-                case .lut: viewModel.recipe.lutStrength
-                case .exposure: viewModel.recipe.exposure
-                case .contrast: viewModel.recipe.contrast
-                case .saturation: viewModel.recipe.saturation
-                case .temperature: viewModel.recipe.temperature
-                }
-            },
-            set: { value in
-                switch viewModel.selectedAdjustment {
-                case .lut: viewModel.recipe.lutStrength = value
-                case .exposure: viewModel.recipe.exposure = value
-                case .contrast: viewModel.recipe.contrast = value
-                case .saturation: viewModel.recipe.saturation = value
-                case .temperature: viewModel.recipe.temperature = value
-                }
-            }
+            get: { viewModel.recipe[viewModel.selectedAdjustment] },
+            set: { viewModel.recipe[viewModel.selectedAdjustment] = $0 }
         )
     }
 
     private var sliderRange: ClosedRange<Double> {
-        switch viewModel.selectedAdjustment {
-        case .lut: 0...1
-        case .exposure: -2...2
-        case .contrast: 0.5...1.5
-        case .saturation: 0...2
-        case .temperature: -1...1
-        }
+        viewModel.selectedAdjustment.valueRange
     }
 
     private var formattedValue: String {
-        let value = sliderBinding.wrappedValue
-        return switch viewModel.selectedAdjustment {
-        case .lut: value.formatted(.percent.precision(.fractionLength(0)))
-        case .exposure: String(format: "%+.1f", value)
-        case .contrast, .saturation: String(format: "%.2f", value)
-        case .temperature: String(format: "%+.0f", value * 100)
-        }
-    }
-}
-
-private extension AdjustmentKind {
-    static let basicAdjustments: [AdjustmentKind] = [
-        .exposure,
-        .contrast,
-        .saturation,
-        .temperature
-    ]
-
-    var shortTitle: String {
-        switch self {
-        case .lut: "Looks"
-        case .exposure: "Light"
-        case .contrast: "Contrast"
-        case .saturation: "Color"
-        case .temperature: "Temp"
-        }
+        viewModel.selectedAdjustment.formattedValue(sliderBinding.wrappedValue)
     }
 }

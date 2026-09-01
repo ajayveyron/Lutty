@@ -154,3 +154,34 @@ struct ImageRendererTests {
         return (bytes[0], bytes[1], bytes[2], bytes[3])
     }
 }
+
+@Suite("Adjustment gestures")
+struct AdjustmentGestureTests {
+    @Test("Vertical swipes move through adjustments and stay in bounds")
+    func verticalSelection() {
+        #expect(AdjustmentGestureMath.selectionIndex(start: 0, verticalTranslation: -52, count: 4) == 1)
+        #expect(AdjustmentGestureMath.selectionIndex(start: 2, verticalTranslation: 60, count: 4) == 1)
+        #expect(AdjustmentGestureMath.selectionIndex(start: 0, verticalTranslation: 500, count: 4) == 0)
+        #expect(AdjustmentGestureMath.selectionIndex(start: 3, verticalTranslation: -500, count: 4) == 3)
+    }
+
+    @Test("Horizontal swipes change values and clamp to their range")
+    func horizontalAdjustment() {
+        let range = -2.0...2.0
+        #expect(AdjustmentGestureMath.adjustedValue(
+            start: 0,
+            horizontalTranslation: 160,
+            range: range
+        ) == 1)
+        #expect(AdjustmentGestureMath.adjustedValue(
+            start: 0,
+            horizontalTranslation: 1_000,
+            range: range
+        ) == 2)
+        #expect(AdjustmentGestureMath.adjustedValue(
+            start: 0,
+            horizontalTranslation: -1_000,
+            range: range
+        ) == -2)
+    }
+}
