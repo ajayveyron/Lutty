@@ -21,6 +21,8 @@ struct HomeView: View {
 
     @State private var selectedPhotoItem: PhotosPickerItem?
     @State private var editorAsset: PhotoAsset?
+    @State private var isPhotoPickerPresented = false
+    @State private var hasPresentedInitialPhotoPicker = false
     @State private var isLoadingPhoto = false
     @State private var errorMessage: String?
 
@@ -50,6 +52,18 @@ struct HomeView: View {
                 loadPhoto(item)
             }
         }
+        .photosPicker(
+            isPresented: $isPhotoPickerPresented,
+            selection: $selectedPhotoItem,
+            matching: .images
+        )
+        .task {
+            guard !hasPresentedInitialPhotoPicker else { return }
+            hasPresentedInitialPhotoPicker = true
+            guard !ProcessInfo.processInfo.arguments.contains("-SkipInitialPhotoPicker") else { return }
+            await Task.yield()
+            isPhotoPickerPresented = true
+        }
     }
 
     private var introduction: some View {
@@ -78,7 +92,9 @@ struct HomeView: View {
                     .foregroundStyle(.secondary)
             }
 
-            PhotosPicker(selection: $selectedPhotoItem, matching: .images) {
+            Button {
+                isPhotoPickerPresented = true
+            } label: {
                 if loading {
                     ProgressView()
                         .frame(maxWidth: .infinity)
