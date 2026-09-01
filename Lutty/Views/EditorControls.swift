@@ -12,6 +12,7 @@ struct LUTSelectionMenu: View {
             } label: {
                 menuLabel("Original", isSelected: viewModel.recipe.selectedLUTID == nil)
             }
+            .menuActionDismissBehavior(.disabled)
 
             ForEach(luts) { lut in
                 Button {
@@ -19,6 +20,7 @@ struct LUTSelectionMenu: View {
                 } label: {
                     menuLabel(lut.displayName, isSelected: viewModel.recipe.selectedLUTID == lut.id)
                 }
+                .menuActionDismissBehavior(.disabled)
             }
 
             Divider()

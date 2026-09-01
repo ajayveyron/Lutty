@@ -17,6 +17,7 @@ enum LUTStoreError: LocalizedError {
 @Observable
 final class LUTStore {
     private(set) var luts: [LUTDefinition] = []
+    private var parsedLUTCache: [UUID: ParsedCubeLUT] = [:]
 
     private let fileManager: FileManager
     private let rootURL: URL
@@ -80,12 +81,14 @@ final class LUTStore {
             domainMaximum: parsed.domainMaximum
         )
         luts.append(definition)
+        parsedLUTCache[id] = parsed
         sortLUTs()
 
         do {
             try saveManifest()
         } catch {
             luts.removeAll { $0.id == id }
+            parsedLUTCache[id] = nil
             try? fileManager.removeItem(at: destinationURL)
             throw error
         }
@@ -99,7 +102,7 @@ final class LUTStore {
         do {
             for sourceURL in sourceURLs.sorted(by: { $0.lastPathComponent < $1.lastPathComponent }) {
                 let data = try Data(contentsOf: sourceURL, options: .mappedIfSafe)
-                try importLUT(
+                _ = try importLUT(
                     data: data,
                     fallbackName: sourceURL.deletingPathExtension().lastPathComponent
                 )
@@ -137,11 +140,13 @@ final class LUTStore {
         let fileURL = filesURL.appending(path: lut.storedFilename)
         let fileData = try? Data(contentsOf: fileURL)
         luts.remove(at: index)
+        let cachedLUT = parsedLUTCache.removeValue(forKey: lut.id)
         do {
             try saveManifest()
             try? fileManager.removeItem(at: fileURL)
         } catch {
             luts.append(lut)
+            parsedLUTCache[lut.id] = cachedLUT
             sortLUTs()
             if let fileData, !fileManager.fileExists(atPath: fileURL.path) {
                 try? fileData.write(to: fileURL, options: .atomic)
@@ -152,11 +157,16 @@ final class LUTStore {
 
     func parsedLUT(for id: UUID?) throws -> ParsedCubeLUT? {
         guard let id else { return nil }
+        if let cached = parsedLUTCache[id] {
+            return cached
+        }
         guard let lut = luts.first(where: { $0.id == id }) else {
             throw LUTStoreError.missingLUT
         }
         let data = try Data(contentsOf: filesURL.appending(path: lut.storedFilename), options: .mappedIfSafe)
-        return try CubeLUTParser.parse(data: data)
+        let parsed = try CubeLUTParser.parse(data: data)
+        parsedLUTCache[id] = parsed
+        return parsed
     }
 
     private func prepareStorage() {

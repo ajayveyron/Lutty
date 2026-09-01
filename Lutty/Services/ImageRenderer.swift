@@ -16,6 +16,12 @@ enum ImageRendererError: LocalizedError {
         }
     }
 }
+
+struct PreparedPreviewImage: @unchecked Sendable {
+    let source: CIImage
+    let original: CGImage
+}
+
 final class ImageRenderer: @unchecked Sendable {
     private let context: CIContext
     private let colorSpace: CGColorSpace
@@ -25,7 +31,7 @@ final class ImageRenderer: @unchecked Sendable {
         let options: [CIContextOption: Any] = [
             .workingColorSpace: colorSpace,
             .outputColorSpace: colorSpace,
-            .cacheIntermediates: false
+            .cacheIntermediates: true
         ]
         if let device = MTLCreateSystemDefaultDevice() {
             context = CIContext(mtlDevice: device, options: options)
@@ -38,15 +44,42 @@ final class ImageRenderer: @unchecked Sendable {
         sourceData: Data,
         recipe: EditRecipe,
         lut: ParsedCubeLUT?,
-        maximumDimension: CGFloat = 1_600
+        maximumDimension: CGFloat = 1_200
     ) throws -> CGImage {
+        let prepared = try preparePreview(
+            sourceData: sourceData,
+            maximumDimension: maximumDimension
+        )
+        return try preview(prepared: prepared, recipe: recipe, lut: lut)
+    }
+
+    func preparePreview(
+        sourceData: Data,
+        maximumDimension: CGFloat = 1_200
+    ) throws -> PreparedPreviewImage {
         let source = try sourceImage(from: sourceData)
         let maximumSourceDimension = max(source.extent.width, source.extent.height)
         let scale = min(1, maximumDimension / maximumSourceDimension)
-        let previewSource = scale < 1
+        let previewSource = normalizedExtent(scale < 1
             ? source.transformed(by: CGAffineTransform(scaleX: scale, y: scale))
-            : source
-        let output = normalizedExtent(process(image: previewSource, recipe: recipe, lut: lut))
+            : source)
+        guard let original = context.createCGImage(
+            previewSource,
+            from: previewSource.extent,
+            format: .RGBA8,
+            colorSpace: colorSpace
+        ) else {
+            throw ImageRendererError.renderingFailed
+        }
+        return PreparedPreviewImage(source: previewSource, original: original)
+    }
+
+    func preview(
+        prepared: PreparedPreviewImage,
+        recipe: EditRecipe,
+        lut: ParsedCubeLUT?
+    ) throws -> CGImage {
+        let output = normalizedExtent(process(image: prepared.source, recipe: recipe, lut: lut))
         guard let image = context.createCGImage(
             output,
             from: output.extent,

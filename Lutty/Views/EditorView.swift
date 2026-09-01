@@ -24,7 +24,10 @@ struct EditorView: View {
                 AppTheme.editorBackground
                     .ignoresSafeArea()
 
-                photoArea
+                VStack(spacing: 0) {
+                    photoArea
+                    horizontalValueIndicator
+                }
             }
             .toolbarBackground(.hidden, for: .navigationBar)
             .toolbarColorScheme(.dark, for: .navigationBar)
@@ -119,12 +122,87 @@ struct EditorView: View {
                     .tint(AppTheme.editorForeground)
                     .controlSize(.large)
             }
+
+            if dragSession.axis == .vertical {
+                adjustmentSelectionOverlay
+                    .transition(.scale(scale: 0.96).combined(with: .opacity))
+            }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .contentShape(Rectangle())
         .simultaneousGesture(adjustmentGesture)
         .simultaneousGesture(compareGesture)
         .clipped()
+    }
+
+    private var adjustmentSelectionOverlay: some View {
+        VStack(spacing: 0) {
+            Image(systemName: "chevron.up")
+                .font(.caption.weight(.semibold))
+                .foregroundStyle(AppTheme.secondaryEditorForeground)
+                .frame(height: 24)
+
+            ForEach(AdjustmentKind.basicAdjustments) { adjustment in
+                let isSelected = viewModel.selectedAdjustment == adjustment
+                HStack(spacing: 16) {
+                    Text(adjustment.title)
+                        .font(.subheadline.weight(isSelected ? .semibold : .regular))
+
+                    Spacer()
+
+                    Text(adjustment.formattedValue(viewModel.recipe[adjustment]))
+                        .font(.subheadline.monospacedDigit())
+                }
+                .foregroundStyle(AppTheme.editorForeground)
+                .padding(.horizontal, 14)
+                .frame(height: 42)
+                .background(isSelected ? Color.accentColor : Color.clear)
+                .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+                .animation(.smooth(duration: 0.16), value: isSelected)
+            }
+
+            Image(systemName: "chevron.down")
+                .font(.caption.weight(.semibold))
+                .foregroundStyle(AppTheme.secondaryEditorForeground)
+                .frame(height: 24)
+        }
+        .padding(6)
+        .frame(width: 250)
+        .glassEffect(
+            .regular,
+            in: RoundedRectangle(cornerRadius: 20, style: .continuous)
+        )
+        .allowsHitTesting(false)
+        .accessibilityHidden(true)
+    }
+
+    private var horizontalValueIndicator: some View {
+        ZStack {
+            if dragSession.axis == .horizontal {
+                let adjustment = viewModel.selectedAdjustment
+                HStack(spacing: 12) {
+                    Text(adjustment.title)
+                        .font(.caption.weight(.semibold))
+
+                    Slider(
+                        value: .constant(viewModel.recipe[adjustment]),
+                        in: adjustment.valueRange
+                    )
+                    .tint(AppTheme.editorForeground)
+                    .allowsHitTesting(false)
+
+                    Text(adjustment.formattedValue(viewModel.recipe[adjustment]))
+                        .font(.caption.monospacedDigit())
+                        .frame(minWidth: 38, alignment: .trailing)
+                }
+                .foregroundStyle(AppTheme.editorForeground)
+                .padding(.horizontal, 16)
+                .transition(.move(edge: .bottom).combined(with: .opacity))
+            }
+        }
+        .frame(height: 44)
+        .animation(.smooth(duration: 0.16), value: dragSession.axis)
+        .accessibilityHidden(true)
     }
 
     private var adjustmentReadout: String {
@@ -236,7 +314,7 @@ struct EditorView: View {
 }
 
 private struct AdjustmentDragSession {
-    enum Axis {
+    enum Axis: Equatable {
         case horizontal
         case vertical
     }

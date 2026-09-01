@@ -20,7 +20,10 @@ final class EditorViewModel {
 
     private let lutStore: LUTStore
     private let renderer: ImageRenderer
-    private var previewTask: Task<Void, Never>?
+    private var preparedPreview: PreparedPreviewImage?
+    private var pendingPreviewRequest: PreviewRequest?
+    private var loadTask: Task<Void, Never>?
+    private var previewLoopTask: Task<Void, Never>?
     private var exportTask: Task<Void, Never>?
 
     init(asset: PhotoAsset, lutStore: LUTStore, renderer: ImageRenderer = ImageRenderer()) {
@@ -30,19 +33,25 @@ final class EditorViewModel {
     }
 
     func loadInitialPreview() {
-        previewTask?.cancel()
+        loadTask?.cancel()
+        previewLoopTask?.cancel()
+        pendingPreviewRequest = nil
         let sourceData = asset.data
         let renderer = renderer
-        previewTask = Task {
+        loadTask = Task {
             isRendering = true
             do {
-                let image = try await Task.detached(priority: .userInitiated) {
-                    try renderer.preview(sourceData: sourceData, recipe: .original, lut: nil)
+                let prepared = try await Task.detached(priority: .userInitiated) {
+                    try renderer.preparePreview(sourceData: sourceData)
                 }.value
                 try Task.checkCancellation()
-                let uiImage = UIImage(cgImage: image)
+                preparedPreview = prepared
+                let uiImage = UIImage(cgImage: prepared.original)
                 originalImage = uiImage
                 previewImage = uiImage
+                if recipe != .original {
+                    schedulePreview()
+                }
             } catch is CancellationError {
                 return
             } catch {
@@ -53,29 +62,52 @@ final class EditorViewModel {
     }
 
     func schedulePreview() {
-        previewTask?.cancel()
-        let sourceData = asset.data
-        let currentRecipe = recipe
-        let renderer = renderer
+        guard preparedPreview != nil else { return }
 
         do {
-            let lut = try lutStore.parsedLUT(for: currentRecipe.selectedLUTID)
-            previewTask = Task {
-                do {
-                    try await Task.sleep(for: .milliseconds(45))
-                    let image = try await Task.detached(priority: .userInitiated) {
-                        try renderer.preview(sourceData: sourceData, recipe: currentRecipe, lut: lut)
-                    }.value
-                    try Task.checkCancellation()
-                    previewImage = UIImage(cgImage: image)
-                } catch is CancellationError {
-                    return
-                } catch {
-                    errorMessage = error.localizedDescription
-                }
-            }
+            pendingPreviewRequest = PreviewRequest(
+                recipe: recipe,
+                lut: try lutStore.parsedLUT(for: recipe.selectedLUTID)
+            )
+            startPreviewLoopIfNeeded()
         } catch {
             errorMessage = error.localizedDescription
+        }
+    }
+
+    private func startPreviewLoopIfNeeded() {
+        guard previewLoopTask == nil, let preparedPreview else { return }
+        let renderer = renderer
+
+        previewLoopTask = Task {
+            do {
+                try await Task.sleep(for: .milliseconds(8))
+
+                while !Task.isCancelled, let request = pendingPreviewRequest {
+                    pendingPreviewRequest = nil
+                    let image = try await Task.detached(priority: .userInitiated) {
+                        try renderer.preview(
+                            prepared: preparedPreview,
+                            recipe: request.recipe,
+                            lut: request.lut
+                        )
+                    }.value
+                    try Task.checkCancellation()
+
+                    if request.recipe == recipe {
+                        previewImage = UIImage(cgImage: image)
+                    }
+                }
+            } catch is CancellationError {
+                // A newer editor lifecycle owns preview rendering now.
+            } catch {
+                errorMessage = error.localizedDescription
+            }
+
+            previewLoopTask = nil
+            if pendingPreviewRequest != nil {
+                startPreviewLoopIfNeeded()
+            }
         }
     }
 
@@ -133,4 +165,9 @@ final class EditorViewModel {
             errorMessage = error.localizedDescription
         }
     }
+}
+
+private struct PreviewRequest: Sendable {
+    let recipe: EditRecipe
+    let lut: ParsedCubeLUT?
 }
