@@ -1,0 +1,8 @@
+.DS_Store
+DerivedData/
+build/
+*.xcuserstate
+*.xcscmblueprint
+xcuserdata/
+Lutty.xcodeproj/project.xcworkspace/xcuserdata/
+Lutty.xcodeproj/xcuserdata/

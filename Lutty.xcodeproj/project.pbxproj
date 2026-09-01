@@ -1,0 +1,629 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		0191DBC08F48BE538FE8C57B /* LUTDefinition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25C1B5DFE9106D3A5E5AF25A /* LUTDefinition.swift */; };
+		084AD2463D20A0A0D07E7F17 /* PhotoExporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23F983824C868D29C5B708D4 /* PhotoExporter.swift */; };
+		0D4C965BB15948FDDEFACBCA /* CubeLUTParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FC698E91E9B173AFA5569B7 /* CubeLUTParser.swift */; };
+		0E7C17EDC8CD29D55C00FBBB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FBA60CB0C51BA45F04E04CDE /* Assets.xcassets */; };
+		1AD272BE4FE0A44C13A73230 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6A58073BD5E356BCC15DDC9 /* HomeView.swift */; };
+		74B0C223C6222EA6DC006BA9 /* EditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 783E2468A40ECE7AEBF32A06 /* EditorView.swift */; };
+		7D0217252AD32B0CA251B7F4 /* CubeLUTParserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38D48F5F0AA0FDC50FAADE64 /* CubeLUTParserTests.swift */; };
+		7E9E8BD4BC36D6A6C96418F3 /* LuttyUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEFF95DCE872440A87A740A2 /* LuttyUITests.swift */; };
+		801957BB03DEB1BB74D73128 /* ImageRendererTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D66CCB7EEF79F8F688F46AE /* ImageRendererTests.swift */; };
+		8181FEDD0D1918CB15229BFA /* LUTStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 115A812AEFD30A8081D4EEF5 /* LUTStoreTests.swift */; };
+		9880C5A4A016063EA3C2FA59 /* LUTLibraryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946CB72FCC9104C50A27A6E6 /* LUTLibraryView.swift */; };
+		AE1D69F5304A7F35EBADC38E /* EditorControls.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21E6F53742DB72E94F3FC07E /* EditorControls.swift */; };
+		CD36378854709668A9C63FCA /* LUTStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167B06BCEE86D86C1AD51517 /* LUTStore.swift */; };
+		D7E7E73F90236A9027D1C64A /* EditRecipe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A579289CFDE6B92846C2204 /* EditRecipe.swift */; };
+		DE821091A43DBDD5B02C89CB /* AppTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CC9C1FDE9542F7F24E28C39 /* AppTheme.swift */; };
+		E7E309BC2E71F2BC5E0BF94D /* ImageRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99E44ECAD1FEA8DB30E55208 /* ImageRenderer.swift */; };
+		EACB73BA92E6E7E7632AFFDF /* LuttyApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC4936B6BB80CC478389B5A0 /* LuttyApp.swift */; };
+		EF14F4C91AC3E6AF7BFA9128 /* EditorViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFB424B45F45AA93CAFA57FA /* EditorViewModel.swift */; };
+		F60D4A01591C1428F63B75F7 /* ShareSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6A97F53855796F1C7C49AEE /* ShareSheet.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		30D8712DAD7527166D9B25A5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 73C019F53E6EDF3FCE23FF11 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 187B04A33E7CC74572C9098A;
+			remoteInfo = Lutty;
+		};
+		4CD657F6C824664C97BFCACE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 73C019F53E6EDF3FCE23FF11 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 187B04A33E7CC74572C9098A;
+			remoteInfo = Lutty;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		0234BA9C0D9D1544CFF0A500 /* Lutty.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Lutty.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		0CC9C1FDE9542F7F24E28C39 /* AppTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppTheme.swift; sourceTree = "<group>"; };
+		115A812AEFD30A8081D4EEF5 /* LUTStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LUTStoreTests.swift; sourceTree = "<group>"; };
+		167B06BCEE86D86C1AD51517 /* LUTStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LUTStore.swift; sourceTree = "<group>"; };
+		21E6F53742DB72E94F3FC07E /* EditorControls.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorControls.swift; sourceTree = "<group>"; };
+		23F983824C868D29C5B708D4 /* PhotoExporter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoExporter.swift; sourceTree = "<group>"; };
+		25C1B5DFE9106D3A5E5AF25A /* LUTDefinition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LUTDefinition.swift; sourceTree = "<group>"; };
+		38D48F5F0AA0FDC50FAADE64 /* CubeLUTParserTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CubeLUTParserTests.swift; sourceTree = "<group>"; };
+		3D66CCB7EEF79F8F688F46AE /* ImageRendererTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageRendererTests.swift; sourceTree = "<group>"; };
+		5A579289CFDE6B92846C2204 /* EditRecipe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditRecipe.swift; sourceTree = "<group>"; };
+		6FC698E91E9B173AFA5569B7 /* CubeLUTParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CubeLUTParser.swift; sourceTree = "<group>"; };
+		783E2468A40ECE7AEBF32A06 /* EditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorView.swift; sourceTree = "<group>"; };
+		946CB72FCC9104C50A27A6E6 /* LUTLibraryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LUTLibraryView.swift; sourceTree = "<group>"; };
+		99E44ECAD1FEA8DB30E55208 /* ImageRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageRenderer.swift; sourceTree = "<group>"; };
+		AFB424B45F45AA93CAFA57FA /* EditorViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorViewModel.swift; sourceTree = "<group>"; };
+		B7618EDA02A4C52E202961CE /* LuttyTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = LuttyTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		B76CD4E9E0BB7A52EFDB8D6D /* LuttyUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = LuttyUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		D6A97F53855796F1C7C49AEE /* ShareSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareSheet.swift; sourceTree = "<group>"; };
+		E6A58073BD5E356BCC15DDC9 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		EEFF95DCE872440A87A740A2 /* LuttyUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LuttyUITests.swift; sourceTree = "<group>"; };
+		FBA60CB0C51BA45F04E04CDE /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		FC4936B6BB80CC478389B5A0 /* LuttyApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LuttyApp.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		0193891755C1974B82C93493 = {
+			isa = PBXGroup;
+			children = (
+				BD385409DD6E2BDE86F6F4BE /* Lutty */,
+				527F9F39B1A89719254F7AB8 /* LuttyTests */,
+				912350424DB948FF0D41D86B /* LuttyUITests */,
+				41F73F80D6C6AF62B5F60BBD /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		41F73F80D6C6AF62B5F60BBD /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				0234BA9C0D9D1544CFF0A500 /* Lutty.app */,
+				B7618EDA02A4C52E202961CE /* LuttyTests.xctest */,
+				B76CD4E9E0BB7A52EFDB8D6D /* LuttyUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		527F9F39B1A89719254F7AB8 /* LuttyTests */ = {
+			isa = PBXGroup;
+			children = (
+				38D48F5F0AA0FDC50FAADE64 /* CubeLUTParserTests.swift */,
+				3D66CCB7EEF79F8F688F46AE /* ImageRendererTests.swift */,
+				115A812AEFD30A8081D4EEF5 /* LUTStoreTests.swift */,
+			);
+			path = LuttyTests;
+			sourceTree = "<group>";
+		};
+		633F0F7E6EC3B49AC1AF0D5C /* Theme */ = {
+			isa = PBXGroup;
+			children = (
+				0CC9C1FDE9542F7F24E28C39 /* AppTheme.swift */,
+			);
+			path = Theme;
+			sourceTree = "<group>";
+		};
+		89B6D189E53DE18586D565A2 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				21E6F53742DB72E94F3FC07E /* EditorControls.swift */,
+				783E2468A40ECE7AEBF32A06 /* EditorView.swift */,
+				E6A58073BD5E356BCC15DDC9 /* HomeView.swift */,
+				946CB72FCC9104C50A27A6E6 /* LUTLibraryView.swift */,
+				D6A97F53855796F1C7C49AEE /* ShareSheet.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		912350424DB948FF0D41D86B /* LuttyUITests */ = {
+			isa = PBXGroup;
+			children = (
+				EEFF95DCE872440A87A740A2 /* LuttyUITests.swift */,
+			);
+			path = LuttyUITests;
+			sourceTree = "<group>";
+		};
+		AE8D2EF67123EE3120DC52D0 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				FC4936B6BB80CC478389B5A0 /* LuttyApp.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		BD385409DD6E2BDE86F6F4BE /* Lutty */ = {
+			isa = PBXGroup;
+			children = (
+				AE8D2EF67123EE3120DC52D0 /* App */,
+				CB3046BFECAB6B9EBF027E84 /* Models */,
+				E3FB7A7D5DD7271D35099BCA /* Resources */,
+				CEB0577573A6D65674600D23 /* Services */,
+				633F0F7E6EC3B49AC1AF0D5C /* Theme */,
+				D1B7EA5D3F22CA717D3DDAEF /* ViewModels */,
+				89B6D189E53DE18586D565A2 /* Views */,
+			);
+			path = Lutty;
+			sourceTree = "<group>";
+		};
+		CB3046BFECAB6B9EBF027E84 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				5A579289CFDE6B92846C2204 /* EditRecipe.swift */,
+				25C1B5DFE9106D3A5E5AF25A /* LUTDefinition.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		CEB0577573A6D65674600D23 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				6FC698E91E9B173AFA5569B7 /* CubeLUTParser.swift */,
+				99E44ECAD1FEA8DB30E55208 /* ImageRenderer.swift */,
+				167B06BCEE86D86C1AD51517 /* LUTStore.swift */,
+				23F983824C868D29C5B708D4 /* PhotoExporter.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		D1B7EA5D3F22CA717D3DDAEF /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				AFB424B45F45AA93CAFA57FA /* EditorViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		E3FB7A7D5DD7271D35099BCA /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				FBA60CB0C51BA45F04E04CDE /* Assets.xcassets */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		187B04A33E7CC74572C9098A /* Lutty */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = BB8FD7814963A9806F642796 /* Build configuration list for PBXNativeTarget "Lutty" */;
+			buildPhases = (
+				13710468A09B7E48F37FF0CB /* Sources */,
+				2AFA229083D310987F8C5642 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Lutty;
+			packageProductDependencies = (
+			);
+			productName = Lutty;
+			productReference = 0234BA9C0D9D1544CFF0A500 /* Lutty.app */;
+			productType = "com.apple.product-type.application";
+		};
+		2AA634FBFAB5F8B814C75DDC /* LuttyUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 682AFF715C96320D3A5FB4CE /* Build configuration list for PBXNativeTarget "LuttyUITests" */;
+			buildPhases = (
+				95B66477918198CE082070B3 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				5C1713609177E02F31749655 /* PBXTargetDependency */,
+			);
+			name = LuttyUITests;
+			packageProductDependencies = (
+			);
+			productName = LuttyUITests;
+			productReference = B76CD4E9E0BB7A52EFDB8D6D /* LuttyUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+		535983383AD70AF53E615CA2 /* LuttyTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F4FE627FAC3C000D6DD59CE5 /* Build configuration list for PBXNativeTarget "LuttyTests" */;
+			buildPhases = (
+				9A4A2E6178720BFEBC7605CD /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				AD03C896A6248C15299261B0 /* PBXTargetDependency */,
+			);
+			name = LuttyTests;
+			packageProductDependencies = (
+			);
+			productName = LuttyTests;
+			productReference = B7618EDA02A4C52E202961CE /* LuttyTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		73C019F53E6EDF3FCE23FF11 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					187B04A33E7CC74572C9098A = {
+						ProvisioningStyle = Automatic;
+					};
+					2AA634FBFAB5F8B814C75DDC = {
+						TestTargetID = 187B04A33E7CC74572C9098A;
+					};
+				};
+			};
+			buildConfigurationList = 14309263F7A18A8925409033 /* Build configuration list for PBXProject "Lutty" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 0193891755C1974B82C93493;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 41F73F80D6C6AF62B5F60BBD /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				187B04A33E7CC74572C9098A /* Lutty */,
+				535983383AD70AF53E615CA2 /* LuttyTests */,
+				2AA634FBFAB5F8B814C75DDC /* LuttyUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		2AFA229083D310987F8C5642 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0E7C17EDC8CD29D55C00FBBB /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		13710468A09B7E48F37FF0CB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DE821091A43DBDD5B02C89CB /* AppTheme.swift in Sources */,
+				0D4C965BB15948FDDEFACBCA /* CubeLUTParser.swift in Sources */,
+				D7E7E73F90236A9027D1C64A /* EditRecipe.swift in Sources */,
+				AE1D69F5304A7F35EBADC38E /* EditorControls.swift in Sources */,
+				74B0C223C6222EA6DC006BA9 /* EditorView.swift in Sources */,
+				EF14F4C91AC3E6AF7BFA9128 /* EditorViewModel.swift in Sources */,
+				1AD272BE4FE0A44C13A73230 /* HomeView.swift in Sources */,
+				E7E309BC2E71F2BC5E0BF94D /* ImageRenderer.swift in Sources */,
+				0191DBC08F48BE538FE8C57B /* LUTDefinition.swift in Sources */,
+				9880C5A4A016063EA3C2FA59 /* LUTLibraryView.swift in Sources */,
+				CD36378854709668A9C63FCA /* LUTStore.swift in Sources */,
+				EACB73BA92E6E7E7632AFFDF /* LuttyApp.swift in Sources */,
+				084AD2463D20A0A0D07E7F17 /* PhotoExporter.swift in Sources */,
+				F60D4A01591C1428F63B75F7 /* ShareSheet.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		95B66477918198CE082070B3 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7E9E8BD4BC36D6A6C96418F3 /* LuttyUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9A4A2E6178720BFEBC7605CD /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7D0217252AD32B0CA251B7F4 /* CubeLUTParserTests.swift in Sources */,
+				801957BB03DEB1BB74D73128 /* ImageRendererTests.swift in Sources */,
+				8181FEDD0D1918CB15229BFA /* LUTStoreTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		5C1713609177E02F31749655 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 187B04A33E7CC74572C9098A /* Lutty */;
+			targetProxy = 4CD657F6C824664C97BFCACE /* PBXContainerItemProxy */;
+		};
+		AD03C896A6248C15299261B0 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 187B04A33E7CC74572C9098A /* Lutty */;
+			targetProxy = 30D8712DAD7527166D9B25A5 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		2615659C99CC868B9E1DA469 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.ajaypawriya.LuttyTests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Lutty.app/Lutty";
+			};
+			name = Debug;
+		};
+		26E4944197878F502ED98653 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Lutty/Resources/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.ajaypawriya.Lutty;
+				PRODUCT_NAME = Lutty;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		29843D61CF5A4FBA6D819AAC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.ajaypawriya.LuttyTests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Lutty.app/Lutty";
+			};
+			name = Release;
+		};
+		2B262120FAF3F988CBEB916D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		5946328948FC083FB7082D49 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.ajaypawriya.LuttyUITests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Lutty;
+			};
+			name = Release;
+		};
+		744390964B5B421FB8A4A20D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		90126053037A9553E50C64A9 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.ajaypawriya.LuttyUITests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Lutty;
+			};
+			name = Debug;
+		};
+		E309612CFD55F3BFC3AF7A29 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Lutty/Resources/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.ajaypawriya.Lutty;
+				PRODUCT_NAME = Lutty;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		14309263F7A18A8925409033 /* Build configuration list for PBXProject "Lutty" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2B262120FAF3F988CBEB916D /* Debug */,
+				744390964B5B421FB8A4A20D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		682AFF715C96320D3A5FB4CE /* Build configuration list for PBXNativeTarget "LuttyUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				90126053037A9553E50C64A9 /* Debug */,
+				5946328948FC083FB7082D49 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		BB8FD7814963A9806F642796 /* Build configuration list for PBXNativeTarget "Lutty" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				26E4944197878F502ED98653 /* Debug */,
+				E309612CFD55F3BFC3AF7A29 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		F4FE627FAC3C000D6DD59CE5 /* Build configuration list for PBXNativeTarget "LuttyTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2615659C99CC868B9E1DA469 /* Debug */,
+				29843D61CF5A4FBA6D819AAC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 73C019F53E6EDF3FCE23FF11 /* Project object */;
+}
