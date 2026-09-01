@@ -6,12 +6,11 @@ import UIKit
 @Observable
 final class EditorViewModel {
     var recipe = EditRecipe.original
-    var selectedAdjustment: AdjustmentKind = .lut
+    var selectedAdjustment: AdjustmentKind = .exposure
     var previewImage: UIImage?
     var originalImage: UIImage?
     var isRendering = true
     var isExporting = false
-    var isComparing = false
     var errorMessage: String?
     var exportNotice: String?
     var shareURL: URL?
@@ -82,12 +81,11 @@ final class EditorViewModel {
 
     func selectLUT(_ id: UUID?) {
         recipe.selectedLUTID = id
-        selectedAdjustment = .lut
     }
 
     func reset() {
         recipe = .original
-        selectedAdjustment = .lut
+        selectedAdjustment = .exposure
     }
 
     func export() {

@@ -4,10 +4,10 @@ struct EditorView: View {
     @Environment(\.dismiss) private var dismiss
     @State private var viewModel: EditorViewModel
     @State private var isLibraryPresented = false
-    @State private var controlSection: EditorControlSection = .looks
     @State private var dragSession = AdjustmentDragSession()
     @State private var selectionHapticTrigger = 0
     @State private var valueHapticTrigger = 0
+    @GestureState private var isComparing = false
 
     private let lutStore: LUTStore
 
@@ -24,20 +24,7 @@ struct EditorView: View {
                 AppTheme.editorBackground
                     .ignoresSafeArea()
 
-                VStack(spacing: 0) {
-                    photoArea
-
-                    GlassEffectContainer(spacing: AppTheme.controlSpacing) {
-                        EditorControls(
-                            viewModel: viewModel,
-                            luts: lutStore.luts,
-                            section: $controlSection
-                        )
-                    }
-                    .padding(.horizontal, 12)
-                    .padding(.top, 8)
-                    .padding(.bottom, 8)
-                }
+                photoArea
             }
             .toolbarBackground(.hidden, for: .navigationBar)
             .toolbarColorScheme(.dark, for: .navigationBar)
@@ -53,9 +40,11 @@ struct EditorView: View {
                         viewModel.reset()
                     }
 
-                    Button("LUTs", systemImage: "camera.filters") {
-                        isLibraryPresented = true
-                    }
+                    LUTSelectionMenu(
+                        viewModel: viewModel,
+                        luts: lutStore.luts,
+                        manageLibrary: { isLibraryPresented = true }
+                    )
 
                     Button {
                         viewModel.export()
@@ -69,16 +58,24 @@ struct EditorView: View {
                     }
                     .disabled(viewModel.isExporting || viewModel.previewImage == nil)
                 }
+
+                ToolbarItem(placement: .principal) {
+                    Text(adjustmentReadout)
+                        .font(.subheadline.monospacedDigit())
+                        .foregroundStyle(AppTheme.editorForeground)
+                        .accessibilityLabel(viewModel.selectedAdjustment.title)
+                        .accessibilityValue(
+                            viewModel.selectedAdjustment.formattedValue(
+                                viewModel.recipe[viewModel.selectedAdjustment]
+                            )
+                        )
+                }
             }
             .task {
                 viewModel.loadInitialPreview()
             }
             .onChange(of: viewModel.recipe) { _, _ in
                 viewModel.schedulePreview()
-            }
-            .onChange(of: controlSection) { _, _ in
-                dragSession = AdjustmentDragSession()
-                viewModel.isComparing = false
             }
             .sensoryFeedback(.selection, trigger: selectionHapticTrigger)
             .sensoryFeedback(.impact(weight: .light, intensity: 0.45), trigger: valueHapticTrigger)
@@ -105,26 +102,16 @@ struct EditorView: View {
     @ViewBuilder
     private var photoArea: some View {
         ZStack {
-            if let image = viewModel.isComparing ? viewModel.originalImage : viewModel.previewImage {
+            if let image = isComparing ? viewModel.originalImage : viewModel.previewImage {
                 Image(uiImage: image)
                     .resizable()
                     .scaledToFit()
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .contentShape(Rectangle())
-                    .onLongPressGesture(
-                        minimumDuration: .infinity,
-                        maximumDistance: .infinity,
-                        pressing: { isPressing in
-                            if controlSection == .looks {
-                                viewModel.isComparing = isPressing
-                            } else if !isPressing {
-                                viewModel.isComparing = false
-                            }
-                        },
-                        perform: {}
-                    )
                     .accessibilityLabel("Edited photo")
-                    .accessibilityHint(photoAccessibilityHint)
+                    .accessibilityHint(
+                        "Swipe vertically to choose an adjustment, horizontally to change its value, or press and hold to compare"
+                    )
             }
 
             if viewModel.isRendering && viewModel.previewImage == nil {
@@ -136,26 +123,29 @@ struct EditorView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .contentShape(Rectangle())
         .simultaneousGesture(adjustmentGesture)
+        .simultaneousGesture(compareGesture)
         .clipped()
     }
 
-    private var photoAccessibilityHint: String {
-        switch controlSection {
-        case .looks:
-            "Press and hold to compare with the original"
-        case .adjustments:
-            "Swipe up or down to choose an adjustment, then left or right to change its value"
-        }
+    private var adjustmentReadout: String {
+        let adjustment = viewModel.selectedAdjustment
+        return "\(adjustment.title) \(adjustment.formattedValue(viewModel.recipe[adjustment]))"
     }
 
     private var adjustmentGesture: some Gesture {
         DragGesture(minimumDistance: 12)
             .onChanged { value in
-                guard controlSection == .adjustments else { return }
                 updateAdjustmentGesture(value)
             }
             .onEnded { _ in
                 dragSession = AdjustmentDragSession()
+            }
+    }
+
+    private var compareGesture: some Gesture {
+        LongPressGesture(minimumDuration: 0.25, maximumDistance: 10)
+            .updating($isComparing) { value, state, _ in
+                state = value
             }
     }
 
