@@ -31,6 +31,18 @@ The checked-in Xcode project is generated from `project.yml` with [XcodeGen](htt
 
 The bundled presets are generated from the original formulas in `Scripts/generate_bundled_luts.swift`. Run `swift Scripts/generate_bundled_luts.swift` to regenerate their `.cube` files.
 
+## Install on your iPhone
+
+1. Make sure the iPhone runs iOS 26 or later.
+2. In Xcode, open **Xcode > Settings > Accounts** and sign in with your Apple Account.
+3. Connect the iPhone to the Mac with USB the first time, unlock it, and tap **Trust** if prompted.
+4. Open **Window > Devices and Simulators**, select the iPhone, and optionally enable **Connect via network** for future wireless runs.
+5. Open the Lutty target's **Signing & Capabilities** tab, leave automatic signing enabled, and select your team. A free Personal Team is sufficient.
+6. If prompted, enable **Developer Mode** under **Settings > Privacy & Security** on the iPhone and complete its restart.
+7. Select the iPhone as Xcode's run destination and press **Run**.
+
+Apple documents [Developer Mode](https://developer.apple.com/documentation/xcode/enabling-developer-mode-on-a-device) and [wireless device pairing](https://help.apple.com/xcode/mac/current/en.lproj/devbc48d1bad.html). Apps signed with a free Personal Team need to be rebuilt and reinstalled every seven days.
+
 ## Tests
 
 The test suite covers LUT parsing and validation, local library persistence, Core Image rendering, orientation, PNG alpha, HEIC export, and basic UI navigation.
