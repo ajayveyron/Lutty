@@ -22,6 +22,7 @@
 		9880C5A4A016063EA3C2FA59 /* LUTLibraryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946CB72FCC9104C50A27A6E6 /* LUTLibraryView.swift */; };
 		AE1D69F5304A7F35EBADC38E /* EditorControls.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21E6F53742DB72E94F3FC07E /* EditorControls.swift */; };
 		B552DB3039F4C9F919B7223E /* Golden-Hour.cube in Resources */ = {isa = PBXBuildFile; fileRef = CE2CBC45A9C6C50D5C4CBC52 /* Golden-Hour.cube */; };
+		BB838D0F16E41BD5475AE043 /* PresetStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA0951E2BE9594E4E835B070 /* PresetStore.swift */; };
 		CD36378854709668A9C63FCA /* LUTStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167B06BCEE86D86C1AD51517 /* LUTStore.swift */; };
 		D7E7E73F90236A9027D1C64A /* EditRecipe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A579289CFDE6B92846C2204 /* EditRecipe.swift */; };
 		DE821091A43DBDD5B02C89CB /* AppTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CC9C1FDE9542F7F24E28C39 /* AppTheme.swift */; };
@@ -69,6 +70,7 @@
 		AFB424B45F45AA93CAFA57FA /* EditorViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorViewModel.swift; sourceTree = "<group>"; };
 		B7618EDA02A4C52E202961CE /* LuttyTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = LuttyTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B76CD4E9E0BB7A52EFDB8D6D /* LuttyUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = LuttyUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		BA0951E2BE9594E4E835B070 /* PresetStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresetStore.swift; sourceTree = "<group>"; };
 		CE2CBC45A9C6C50D5C4CBC52 /* Golden-Hour.cube */ = {isa = PBXFileReference; path = "Golden-Hour.cube"; sourceTree = "<group>"; };
 		D6A97F53855796F1C7C49AEE /* ShareSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareSheet.swift; sourceTree = "<group>"; };
 		E6A58073BD5E356BCC15DDC9 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
@@ -186,6 +188,7 @@
 				99E44ECAD1FEA8DB30E55208 /* ImageRenderer.swift */,
 				167B06BCEE86D86C1AD51517 /* LUTStore.swift */,
 				23F983824C868D29C5B708D4 /* PhotoExporter.swift */,
+				BA0951E2BE9594E4E835B070 /* PresetStore.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -335,6 +338,7 @@
 				CD36378854709668A9C63FCA /* LUTStore.swift in Sources */,
 				EACB73BA92E6E7E7632AFFDF /* LuttyApp.swift in Sources */,
 				084AD2463D20A0A0D07E7F17 /* PhotoExporter.swift in Sources */,
+				BB838D0F16E41BD5475AE043 /* PresetStore.swift in Sources */,
 				F60D4A01591C1428F63B75F7 /* ShareSheet.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

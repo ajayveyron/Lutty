@@ -95,3 +95,55 @@ struct LUTStoreTests {
         #expect(parsed.allSatisfy { $0.size == 17 })
     }
 }
+
+@Suite("Local edit presets")
+@MainActor
+struct PresetStoreTests {
+    @Test("Saves, reloads, and deletes the complete edit recipe")
+    func persistsPresetChanges() throws {
+        let testRoot = FileManager.default.temporaryDirectory
+            .appending(path: "LuttyPresetTests-\(UUID().uuidString)", directoryHint: .isDirectory)
+        defer { try? FileManager.default.removeItem(at: testRoot) }
+
+        let lutID = UUID()
+        var recipe = EditRecipe.original
+        recipe.selectedLUTID = lutID
+        recipe.lutStrength = 0.72
+        recipe.exposure = 0.4
+        recipe.highlights = -0.3
+        recipe.shadows = 0.25
+        recipe.dehaze = 0.35
+        recipe.sharpness = 0.45
+        recipe.vignette = 0.5
+        recipe.filmGrain = 0.2
+
+        let store = PresetStore(rootURL: testRoot)
+        let saved = try store.save(name: "  Evening Walk  ", recipe: recipe)
+        #expect(saved.name == "Evening Walk")
+        #expect(saved.recipe == recipe)
+
+        let reloaded = PresetStore(rootURL: testRoot)
+        #expect(reloaded.presets.count == 1)
+        #expect(reloaded.presets.first?.recipe.selectedLUTID == lutID)
+        #expect(reloaded.presets.first?.recipe.filmGrain == 0.2)
+
+        guard let persisted = reloaded.presets.first else {
+            Issue.record("Expected the preset to persist")
+            return
+        }
+        try reloaded.delete(persisted)
+        #expect(PresetStore(rootURL: testRoot).presets.isEmpty)
+    }
+
+    @Test("Rejects an empty preset name")
+    func rejectsEmptyName() {
+        let testRoot = FileManager.default.temporaryDirectory
+            .appending(path: "LuttyPresetNameTests-\(UUID().uuidString)", directoryHint: .isDirectory)
+        defer { try? FileManager.default.removeItem(at: testRoot) }
+
+        let store = PresetStore(rootURL: testRoot)
+        #expect(throws: PresetStoreError.self) {
+            try store.save(name: "   ", recipe: .original)
+        }
+    }
+}

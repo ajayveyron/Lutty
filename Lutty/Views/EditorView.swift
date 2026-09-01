@@ -2,8 +2,12 @@ import SwiftUI
 
 struct EditorView: View {
     @Environment(\.dismiss) private var dismiss
+    @Environment(PresetStore.self) private var presetStore
     @State private var viewModel: EditorViewModel
     @State private var isLibraryPresented = false
+    @State private var isSavePresetPresented = false
+    @State private var presetName = ""
+    @State private var presetPendingDeletion: EditPreset?
     @State private var dragSession = AdjustmentDragSession()
     @State private var selectionHapticTrigger = 0
     @State private var valueHapticTrigger = 0
@@ -47,6 +51,13 @@ struct EditorView: View {
                         viewModel: viewModel,
                         luts: lutStore.luts,
                         manageLibrary: { isLibraryPresented = true }
+                    )
+
+                    PresetSelectionMenu(
+                        viewModel: viewModel,
+                        presets: presetStore.presets,
+                        saveCurrentLook: presentSavePreset,
+                        deletePreset: { presetPendingDeletion = $0 }
                     )
 
                     Button {
@@ -98,6 +109,23 @@ struct EditorView: View {
                 Button("OK", role: .cancel) {}
             } message: {
                 Text(viewModel.errorMessage ?? "Try again.")
+            }
+            .alert("Save Preset", isPresented: $isSavePresetPresented) {
+                TextField("Preset name", text: $presetName)
+                Button("Cancel", role: .cancel) {}
+                Button("Save", action: savePreset)
+            } message: {
+                Text("Save the LUT and every current adjustment.")
+            }
+            .confirmationDialog(
+                "Delete \(presetPendingDeletion?.name ?? "preset")?",
+                isPresented: deletePresetBinding,
+                titleVisibility: .visible
+            ) {
+                Button("Delete", role: .destructive, action: deletePreset)
+                Button("Cancel", role: .cancel) {
+                    presetPendingDeletion = nil
+                }
             }
         }
     }
@@ -177,31 +205,25 @@ struct EditorView: View {
     }
 
     private var horizontalValueIndicator: some View {
-        ZStack {
-            if dragSession.axis == .horizontal {
-                let adjustment = viewModel.selectedAdjustment
-                HStack(spacing: 12) {
-                    Text(adjustment.title)
-                        .font(.caption.weight(.semibold))
+        let adjustment = viewModel.selectedAdjustment
+        return HStack(spacing: 12) {
+            Text(adjustment.title)
+                .font(.caption.weight(.semibold))
 
-                    Slider(
-                        value: .constant(viewModel.recipe[adjustment]),
-                        in: adjustment.valueRange
-                    )
-                    .tint(AppTheme.editorForeground)
-                    .allowsHitTesting(false)
+            Slider(
+                value: .constant(viewModel.recipe[adjustment]),
+                in: adjustment.valueRange
+            )
+            .tint(AppTheme.editorForeground)
+            .allowsHitTesting(false)
 
-                    Text(adjustment.formattedValue(viewModel.recipe[adjustment]))
-                        .font(.caption.monospacedDigit())
-                        .frame(minWidth: 38, alignment: .trailing)
-                }
-                .foregroundStyle(AppTheme.editorForeground)
-                .padding(.horizontal, 16)
-                .transition(.move(edge: .bottom).combined(with: .opacity))
-            }
+            Text(adjustment.formattedValue(viewModel.recipe[adjustment]))
+                .font(.caption.monospacedDigit())
+                .frame(minWidth: 38, alignment: .trailing)
         }
+        .foregroundStyle(AppTheme.editorForeground)
+        .padding(.horizontal, 16)
         .frame(height: 44)
-        .animation(.smooth(duration: 0.16), value: dragSession.axis)
         .accessibilityHidden(true)
     }
 
@@ -295,7 +317,8 @@ struct EditorView: View {
         case .lut: 0.05
         case .exposure: 0.2
         case .contrast: 0.05
-        case .saturation, .temperature: 0.1
+        case .saturation, .highlights, .shadows, .temperature, .dehaze: 0.1
+        case .sharpness, .vignette, .filmGrain: 0.05
         }
     }
 
@@ -309,6 +332,36 @@ struct EditorView: View {
     private func shareDismissed() {
         if let notice = viewModel.exportNotice, notice != "Saved to Photos" {
             viewModel.errorMessage = notice
+        }
+    }
+
+    private func presentSavePreset() {
+        presetName = "Look \(presetStore.presets.count + 1)"
+        isSavePresetPresented = true
+    }
+
+    private func savePreset() {
+        do {
+            try presetStore.save(name: presetName, recipe: viewModel.recipe)
+        } catch {
+            viewModel.errorMessage = error.localizedDescription
+        }
+    }
+
+    private var deletePresetBinding: Binding<Bool> {
+        Binding(
+            get: { presetPendingDeletion != nil },
+            set: { if !$0 { presetPendingDeletion = nil } }
+        )
+    }
+
+    private func deletePreset() {
+        guard let preset = presetPendingDeletion else { return }
+        presetPendingDeletion = nil
+        do {
+            try presetStore.delete(preset)
+        } catch {
+            viewModel.errorMessage = error.localizedDescription
         }
     }
 }
@@ -331,7 +384,7 @@ struct AdjustmentGestureMath {
 
     static func selectionIndex(start: Int, verticalTranslation: CGFloat, count: Int) -> Int {
         guard count > 0 else { return 0 }
-        let offset = Int(-verticalTranslation / verticalSelectionDistance)
+        let offset = Int(verticalTranslation / verticalSelectionDistance)
         return min(max(start + offset, 0), count - 1)
     }
 

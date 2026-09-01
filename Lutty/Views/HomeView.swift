@@ -196,4 +196,5 @@ struct HomeView: View {
 #Preview {
     HomeView()
         .environment(LUTStore(rootURL: FileManager.default.temporaryDirectory.appending(path: "LuttyPreview")))
+        .environment(PresetStore(rootURL: FileManager.default.temporaryDirectory.appending(path: "LuttyPreview")))
 }

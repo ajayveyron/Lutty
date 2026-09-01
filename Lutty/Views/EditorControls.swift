@@ -41,3 +41,53 @@ struct LUTSelectionMenu: View {
         }
     }
 }
+
+struct PresetSelectionMenu: View {
+    @Bindable var viewModel: EditorViewModel
+    let presets: [EditPreset]
+    let saveCurrentLook: () -> Void
+    let deletePreset: (EditPreset) -> Void
+
+    var body: some View {
+        Menu {
+            Button("Save Current Look", systemImage: "plus", action: saveCurrentLook)
+
+            if !presets.isEmpty {
+                Divider()
+
+                ForEach(presets) { preset in
+                    Button {
+                        viewModel.applyPreset(preset)
+                    } label: {
+                        menuLabel(
+                            preset.name,
+                            isSelected: viewModel.recipe == preset.recipe
+                        )
+                    }
+                    .menuActionDismissBehavior(.disabled)
+                }
+
+                Divider()
+
+                Menu("Delete Preset", systemImage: "trash") {
+                    ForEach(presets) { preset in
+                        Button(preset.name, role: .destructive) {
+                            deletePreset(preset)
+                        }
+                    }
+                }
+            }
+        } label: {
+            Label("Presets", systemImage: "bookmark")
+        }
+    }
+
+    @ViewBuilder
+    private func menuLabel(_ title: String, isSelected: Bool) -> some View {
+        if isSelected {
+            Label(title, systemImage: "checkmark")
+        } else {
+            Text(title)
+        }
+    }
+}

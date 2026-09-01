@@ -167,6 +167,23 @@ final class ImageRenderer: @unchecked Sendable {
             output = controls.outputImage ?? output
         }
 
+        if recipe.highlights != 0 || recipe.shadows != 0 {
+            let toneCurve = CIFilter.toneCurve()
+            toneCurve.inputImage = output
+            toneCurve.point0 = CGPoint(x: 0, y: 0)
+            toneCurve.point1 = CGPoint(
+                x: 0.25,
+                y: 0.25 + recipe.shadows * 0.20
+            )
+            toneCurve.point2 = CGPoint(x: 0.5, y: 0.5)
+            toneCurve.point3 = CGPoint(
+                x: 0.75,
+                y: 0.75 + recipe.highlights * 0.20
+            )
+            toneCurve.point4 = CGPoint(x: 1, y: 1)
+            output = toneCurve.outputImage ?? output
+        }
+
         if recipe.temperature != 0 {
             let temperature = CIFilter.temperatureAndTint()
             temperature.inputImage = output
@@ -175,7 +192,73 @@ final class ImageRenderer: @unchecked Sendable {
             output = temperature.outputImage ?? output
         }
 
+        if recipe.dehaze != 0 {
+            let dehaze = CIFilter.colorControls()
+            dehaze.inputImage = output
+            dehaze.contrast = Float(1 + recipe.dehaze * 0.35)
+            dehaze.saturation = Float(1 + recipe.dehaze * 0.15)
+            dehaze.brightness = Float(-recipe.dehaze * 0.02)
+            output = dehaze.outputImage ?? output
+        }
+
+        if recipe.sharpness > 0 {
+            let sharpness = CIFilter.sharpenLuminance()
+            sharpness.inputImage = output
+            sharpness.sharpness = Float(recipe.sharpness * 1.5)
+            output = sharpness.outputImage ?? output
+        }
+
+        if recipe.vignette > 0 {
+            let vignette = CIFilter.vignette()
+            vignette.inputImage = output
+            vignette.intensity = Float(recipe.vignette)
+            vignette.radius = 1
+            output = vignette.outputImage ?? output
+        }
+
+        if recipe.filmGrain > 0 {
+            output = applyFilmGrain(to: output, amount: recipe.filmGrain)
+        }
+
         return output.cropped(to: image.extent)
+    }
+
+    private func applyFilmGrain(to image: CIImage, amount: Double) -> CIImage {
+        let random = CIFilter.randomGenerator()
+        guard var noise = random.outputImage else { return image }
+        noise = noise
+            .transformed(by: CGAffineTransform(scaleX: 1.35, y: 1.35))
+            .cropped(to: image.extent)
+
+        let monochrome = CIFilter.colorControls()
+        monochrome.inputImage = noise
+        monochrome.saturation = 0
+        monochrome.contrast = 1.45
+        guard let monochromeNoise = monochrome.outputImage else { return image }
+
+        let opaqueNoise = CIFilter.colorMatrix()
+        opaqueNoise.inputImage = monochromeNoise
+        opaqueNoise.aVector = CIVector(x: 0, y: 0, z: 0, w: 0)
+        opaqueNoise.biasVector = CIVector(x: 0, y: 0, z: 0, w: 1)
+        guard let noiseLayer = opaqueNoise.outputImage?.cropped(to: image.extent) else {
+            return image
+        }
+
+        let constrainedNoise = CIFilter.sourceAtopCompositing()
+        constrainedNoise.inputImage = noiseLayer
+        constrainedNoise.backgroundImage = image
+        guard let alphaMatchedNoise = constrainedNoise.outputImage else { return image }
+
+        let softLight = CIFilter.softLightBlendMode()
+        softLight.inputImage = alphaMatchedNoise
+        softLight.backgroundImage = image
+        guard let grained = softLight.outputImage?.cropped(to: image.extent) else { return image }
+
+        return blend(
+            foreground: grained,
+            background: image,
+            amount: amount * 0.65
+        )
     }
 
     private func applyDomain(to image: CIImage, lut: ParsedCubeLUT) -> CIImage {

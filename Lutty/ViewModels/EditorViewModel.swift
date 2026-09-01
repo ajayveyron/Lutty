@@ -115,6 +115,17 @@ final class EditorViewModel {
         recipe.selectedLUTID = id
     }
 
+    func applyPreset(_ preset: EditPreset) {
+        var savedRecipe = preset.recipe
+        if let selectedLUTID = savedRecipe.selectedLUTID,
+           !lutStore.luts.contains(where: { $0.id == selectedLUTID }) {
+            savedRecipe.selectedLUTID = nil
+            errorMessage = "\(preset.name) used a LUT that is no longer available. The other adjustments were applied."
+        }
+        recipe = savedRecipe
+        selectedAdjustment = .exposure
+    }
+
     func reset() {
         recipe = .original
         selectedAdjustment = .exposure
